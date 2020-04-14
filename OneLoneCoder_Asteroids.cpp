@@ -7,7 +7,7 @@ License
 One Lone Coder Console Game Engine  Copyright (C) 2018  Javidx9
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
-under certain conditions; See license for details. 
+under certain conditions; See license for details.
 Original works located at:
 https://www.github.com/onelonecoder
 https://www.onelonecoder.com
@@ -17,10 +17,10 @@ https://github.com/OneLoneCoder/videos/blob/master/LICENSE
 
 From Javidx9 :)
 ~~~~~~~~~~~~~~~
-Hello! Ultimately I don't care what you use this for. It's intended to be 
-educational, and perhaps to the oddly minded - a little bit of fun. 
-Please hack this, change it and use it in any way you see fit. You acknowledge 
-that I am not responsible for anything bad that happens as a result of 
+Hello! Ultimately I don't care what you use this for. It's intended to be
+educational, and perhaps to the oddly minded - a little bit of fun.
+Please hack this, change it and use it in any way you see fit. You acknowledge
+that I am not responsible for anything bad that happens as a result of
 your actions. However this code is protected by GNU GPLv3, see the license in the
 github repo. This means you must attribute me if you use it. You can view this
 license here: https://github.com/OneLoneCoder/videos/blob/master/LICENSE
@@ -61,7 +61,7 @@ Last Updated: 30/08/2017
 #include <algorithm>
 using namespace std;
 
-#include "olcConsoleGameEngine.h"
+#include "olcConsoleGameEngineSDL.h"
 
 class OneLoneCoder_Asteroids : public olcConsoleGameEngine
 {
@@ -95,12 +95,11 @@ protected:
 	// Called by olcConsoleGameEngine
 	virtual bool OnUserCreate()
 	{
-		vecModelShip = 
-		{
-			{ 0.0f, -5.0f},
-			{-2.5f, +2.5f},
-			{+2.5f, +2.5f}
-		}; // A simple Isoceles Triangle
+		vecModelShip =
+			{
+				{0.0f, -5.0f},
+				{-2.5f, +2.5f},
+				{+2.5f, +2.5f}}; // A simple Isoceles Triangle
 
 		// Create a "jagged" circle for the asteroid. It's important it remains
 		// mostly circular, as we do a simple collision check against a perfect
@@ -109,7 +108,7 @@ protected:
 		for (int i = 0; i < verts; i++)
 		{
 			float noise = (float)rand() / (float)RAND_MAX * 0.4f + 0.8f;
-			vecModelAsteroid.push_back(make_pair(noise * sinf(((float)i / (float)verts) * 6.28318f), 
+			vecModelAsteroid.push_back(make_pair(noise * sinf(((float)i / (float)verts) * 6.28318f),
 												 noise * cosf(((float)i / (float)verts) * 6.28318f)));
 		}
 
@@ -130,8 +129,8 @@ protected:
 		vecAsteroids.clear();
 
 		// Put in two asteroids
-		vecAsteroids.push_back({ (int)16, 20.0f, 20.0f, 8.0f, -6.0f, 0.0f });
-		vecAsteroids.push_back({ (int)16, 100.0f, 20.0f, -5.0f, 3.0f, 0.0f });
+		vecAsteroids.push_back({(int)16, 20.0f, 20.0f, 8.0f, -6.0f, 0.0f});
+		vecAsteroids.push_back({(int)16, 100.0f, 20.0f, -5.0f, 3.0f, 0.0f});
 
 		// Reset game
 		bDead = false;
@@ -143,23 +142,27 @@ protected:
 	{
 		ox = ix;
 		oy = iy;
-		if (ix < 0.0f)	ox = ix + (float)ScreenWidth();
-		if (ix >= (float)ScreenWidth())	ox = ix - (float)ScreenWidth();
-		if (iy < 0.0f)	oy = iy + (float)ScreenHeight();
-		if (iy >= (float)ScreenHeight()) oy = iy - (float)ScreenHeight();
+		if (ix < 0.0f)
+			ox = ix + (float)ScreenWidth();
+		if (ix >= (float)ScreenWidth())
+			ox = ix - (float)ScreenWidth();
+		if (iy < 0.0f)
+			oy = iy + (float)ScreenHeight();
+		if (iy >= (float)ScreenHeight())
+			oy = iy - (float)ScreenHeight();
 	}
 
 	// Overriden to handle toroidal drawing routines
 	virtual void Draw(int x, int y, wchar_t c = 0x2588, short col = 0x000F)
 	{
 		float fx, fy;
-		WrapCoordinates(x, y, fx, fy);		
+		WrapCoordinates(x, y, fx, fy);
 		olcConsoleGameEngine::Draw(fx, fy, c, col);
 	}
 
 	bool IsPointInsideCircle(float cx, float cy, float radius, float x, float y)
 	{
-		return sqrt((x-cx)*(x-cx) + (y-cy)*(y-cy)) < radius;
+		return sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)) < radius;
 	}
 
 	// Called by olcConsoleGameEngine
@@ -199,7 +202,7 @@ protected:
 
 		// Fire Bullet in direction of player
 		if (m_keys[VK_SPACE].bReleased)
-			vecBullets.push_back({ 0, player.x, player.y, 50.0f * sinf(player.angle), -50.0f * cosf(player.angle), 100.0f });
+			vecBullets.push_back({0, player.x, player.y, 50.0f * sinf(player.angle), -50.0f * cosf(player.angle), 100.0f});
 
 		// Update and draw asteroids
 		for (auto &a : vecAsteroids)
@@ -213,7 +216,7 @@ protected:
 			WrapCoordinates(a.x, a.y, a.x, a.y);
 
 			// Draw Asteroids
-			DrawWireFrameModel(vecModelAsteroid, a.x, a.y, a.angle, (float)a.nSize, FG_YELLOW);	
+			DrawWireFrameModel(vecModelAsteroid, a.x, a.y, a.angle, (float)a.nSize, FG_YELLOW);
 		}
 
 		// Any new asteroids created after collision detection are stored
@@ -233,11 +236,11 @@ protected:
 			for (auto &a : vecAsteroids)
 			{
 				//if (IsPointInsideRectangle(a.x, a.y, a.x + a.nSize, a.y + a.nSize, b.x, b.y))
-				if(IsPointInsideCircle(a.x, a.y, a.nSize, b.x, b.y))
+				if (IsPointInsideCircle(a.x, a.y, a.nSize, b.x, b.y))
 				{
 					// Asteroid Hit - Remove bullet
 					// We've already updated the bullets, so force bullet to be offscreen
-					// so it is cleaned up by the removal algorithm. 
+					// so it is cleaned up by the removal algorithm.
 					b.x = -100;
 
 					// Create child asteroids
@@ -245,8 +248,8 @@ protected:
 					{
 						float angle1 = ((float)rand() / (float)RAND_MAX) * 6.283185f;
 						float angle2 = ((float)rand() / (float)RAND_MAX) * 6.283185f;
-						newAsteroids.push_back({ (int)a.nSize >> 1 ,a.x, a.y, 10.0f * sinf(angle1), 10.0f * cosf(angle1), 0.0f });
-						newAsteroids.push_back({ (int)a.nSize >> 1 ,a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle2), 0.0f });
+						newAsteroids.push_back({(int)a.nSize >> 1, a.x, a.y, 10.0f * sinf(angle1), 10.0f * cosf(angle1), 0.0f});
+						newAsteroids.push_back({(int)a.nSize >> 1, a.x, a.y, 10.0f * sinf(angle2), 10.0f * cosf(angle2), 0.0f});
 					}
 
 					// Remove asteroid - Same approach as bullets
@@ -257,7 +260,7 @@ protected:
 		}
 
 		// Append new asteroids to existing vector
-		for(auto a:newAsteroids)
+		for (auto a : newAsteroids)
 			vecAsteroids.push_back(a);
 
 		// Clear up dead objects - They are out of game space
@@ -280,13 +283,13 @@ protected:
 			// Add two new asteroids, but in a place where the player is not, we'll simply
 			// add them 90 degrees left and right to the player, their coordinates will
 			// be wrapped by th enext asteroid update
-			vecAsteroids.push_back({ (int)16, 30.0f * sinf(player.angle - 3.14159f/2.0f) + player.x,
-											  30.0f * cosf(player.angle - 3.14159f/2.0f) + player.y,
-											  10.0f * sinf(player.angle), 10.0f*cosf(player.angle), 0.0f });
+			vecAsteroids.push_back({(int)16, 30.0f * sinf(player.angle - 3.14159f / 2.0f) + player.x,
+									30.0f * cosf(player.angle - 3.14159f / 2.0f) + player.y,
+									10.0f * sinf(player.angle), 10.0f * cosf(player.angle), 0.0f});
 
-			vecAsteroids.push_back({ (int)16, 30.0f * sinf(player.angle + 3.14159f/2.0f) + player.x,
-											  30.0f * cosf(player.angle + 3.14159f/2.0f) + player.y,
-											  10.0f * sinf(-player.angle), 10.0f*cosf(-player.angle), 0.0f });
+			vecAsteroids.push_back({(int)16, 30.0f * sinf(player.angle + 3.14159f / 2.0f) + player.x,
+									30.0f * cosf(player.angle + 3.14159f / 2.0f) + player.y,
+									10.0f * sinf(-player.angle), 10.0f * cosf(-player.angle), 0.0f});
 		}
 
 		// Remove bullets that have gone off screen
@@ -313,7 +316,7 @@ protected:
 	{
 		// pair.first = x coordinate
 		// pair.second = y coordinate
-		
+
 		// Create translated model vector of coordinate pairs
 		vector<pair<float, float>> vecTransformedCoordinates;
 		int verts = vecModelCoordinates.size();
@@ -344,12 +347,11 @@ protected:
 		for (int i = 0; i < verts + 1; i++)
 		{
 			int j = (i + 1);
-			DrawLine(vecTransformedCoordinates[i % verts].first, vecTransformedCoordinates[i % verts].second, 
-				vecTransformedCoordinates[j % verts].first, vecTransformedCoordinates[j % verts].second, PIXEL_SOLID, col);
+			DrawLine(vecTransformedCoordinates[i % verts].first, vecTransformedCoordinates[i % verts].second,
+					 vecTransformedCoordinates[j % verts].first, vecTransformedCoordinates[j % verts].second, PIXEL_SOLID, col);
 		}
 	}
 };
-
 
 int main()
 {
